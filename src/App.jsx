@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/signupPage";
+import SignupPage from "./pages/SignupPage";
 import OnboardingWizard from "./pages/onboardingWizard";
 import OtpVerificationPage from "./pages/OtpVerificationPage";
 import SetPinPage from "./pages/SetPinPage";
-import ConfirmPinPage from "./pages/confirmPinPage";
+import ConfirmPinPage from "./pages/ConfirmPinPage";
 import EnterPinPage from "./pages/EnterPinPage";
 import ForgotPassword from "./pages/ForgotPassword";
 
