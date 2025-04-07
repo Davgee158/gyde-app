@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import SignUpBg from '../assets/login-without-bg.png'
+import { set, useForm } from 'react-hook-form'
 import backArrow from '../assets/arrow-back-basic-svgrepo-com.svg'
 import InputField from '../components/InputField'
 import SubmitButton from '../components/SubmitButton'
@@ -9,14 +8,17 @@ import Profile from '../assets/profile-circle-svgrepo-com.svg'
 import PhoneLogo from '../assets/phone-contact.png'
 import usePasswordToggle from '../hooks/usePasswordToggle'
 import { signUpUser } from '../api/SignUpAuth'
-import appleLogo from "../assets/apple.png";
-import googleLogo from "../assets/google.png";
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
-
-const signupPage = () => {
+const SignupPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({ mode: 'onChange'});
+
+    const navigate = useNavigate()
+    const [isTransitioning, setIsTransitioning] = useState(false)
     
-    const {visible, Icon, togglePasswordVisiblity} = usePasswordToggle();
+    const {visible: passwordVisible, Icon: passwordIcon, togglePasswordVisiblity: togglePassword} = usePasswordToggle();
+    const {visible: confirmPasswordVisible, Icon: confirmPasswordIcon, togglePasswordVisiblity: toggleConfirmPassword} = usePasswordToggle();
 
     console.log(errors);
 
@@ -24,33 +26,47 @@ const signupPage = () => {
         try {
             const result = await signUpUser(data);
             console.log("signUp response", result)
+            handleTransitionToOnboarding(data.email)
         } catch (error) {
             console.error("signUp failed", error)
         }
         
     } 
 
+    const handleTransitionToOnboarding = (email) => {
+       
+        setIsTransitioning(true);
+        
+       
+        setTimeout(() => {
+            navigate('/otp', {state: { email } });
+        }, 200);
+    }
+
 
   return (
-    <div className='signup-container relative'>
-        <div className='signup-form h-[15rem] w-full bg-cover bg-center bg-no-repeat'
-            style={{backgroundImage: `url(${SignUpBg})`,
-            backgroundPosition: 'center 31%',
-        }}></div>
-        <div className='w-full absolute top-[10rem] bg-white rounded-tr-[4rem] py-8 px-8'>
-            <div className='pb-2'>
+    <div className='signup-container relative min-h-screen pt-18 md:pt-0 md:flex md:justify-center md:items-center'
+        style={{
+            background: 'radial-gradient(circle at center 60%, #00a0c8 0%, #005e80 40%, #002940 70%, #00172a 100% )',
+            height: '100%',
+            width: '100%'
+        }}>
+        <div className='w-full absolute top-[10rem] bg-white rounded-tr-[4rem] py-8 px-8 flex flex-col md:block min-h-[calc(100vh-10rem)] md:min-h-auto md:w-3/5 mx-auto md:w-3/5 md:rounded-[4rem] md:py-10 md:px-14'>
+            <div className='pb-2 md:pb-5'>
                 <Link to= "/login"><img src={backArrow} alt="back-arrow" className='inline-block pr-2' /></Link>
-                <span className='text-sm'
+                <span className='text-sm md:text-base'
                     style={{color: '#134e75'}}
                 >Back to Login</span>
             </div>
-            <h1 className='text-gray-800 text-3xl font-extrabold mb-8 text-center'>Create new <span className='block'>Account</span></h1>
+            <h1 className='text-gray-800 text-3xl md:text-4xl font-extrabold mb-8 text-center'>Create new <span className='block'>Account</span></h1>
             <div className='px-6'>
                 <form noValidate onSubmit={handleSubmit(onSubmit)}>
                     <InputField
                         id='Name'
                         type='text'
                         placeholder='Name'
+                        boxClass='md:py-4 md:rounded-4xl md:text-xl px-16'
+                        divClass='md:py-5'
                         registerProps={register('name', {
                             required: 'This is required',
                         })}
@@ -63,7 +79,9 @@ const signupPage = () => {
                     <InputField
                         id='Email'
                         type='text'
-                        placeholder='Email' 
+                        placeholder='Email'
+                        boxClass='md:py-4 md:rounded-4xl md:text-xl px-16'
+                        divClass='md:py-5' 
                         registerProps={register('email', {
                             required: 'This is required',
                             validate: value => {
@@ -91,6 +109,8 @@ const signupPage = () => {
                         id='PhoneNumber'
                         type='tel'
                         placeholder='Phone Number'
+                        boxClass='md:py-4 md:rounded-4xl md:text-xl px-16'
+                        divClass='md:py-5'
                         registerProps={register('number', {
                             required: 'This is required',
                             pattern: {
@@ -107,8 +127,10 @@ const signupPage = () => {
                     <div className='relative'>
                         <InputField 
                         id='Password'
-                        type={visible ? 'text' : 'password'}
+                        type={passwordVisible ? 'text' : 'password'}
                         placeholder='Password'
+                        boxClass='md:py-4 md:rounded-4xl md:text-xl px-16'
+                        divClass='md:py-5'
                         registerProps={register('password', {
                             required: 'This is required',
                         })}
@@ -127,11 +149,11 @@ const signupPage = () => {
                         />
                         <button 
                             type="button" 
-                            onClick={togglePasswordVisiblity} 
-                            className="absolute right-0 pr-6 top-[0.875rem] flex items-center cursor-pointer"
+                            onClick={togglePassword} 
+                            className="absolute right-0 pr-6 top-[0.875rem] flex items-center cursor-pointer md:top-[1.25rem] md:pr-8"
                         >
-                            <img src={Icon} 
-                             alt={visible ? "Hide Password" : "Show Password"} 
+                            <img src={passwordIcon} 
+                             alt={passwordVisible ? "Hide Password" : "Show Password"} 
                             className="w-6 h-6" />
                         </button>
                     </div>
@@ -139,8 +161,10 @@ const signupPage = () => {
                     <div className='relative'>
                     <InputField
                         id='ConfirmPassword'
-                        type={visible ? 'text' : 'password'} 
+                        type={confirmPasswordVisible ? 'text' : 'password'} 
                         placeholder='Confirm Password'
+                        boxClass='md:py-4 md:rounded-4xl md:text-xl px-16'
+                        divClass='md:py-5'
                         registerProps={register('confirmPassword', {
                             required: 'This is required',
                             validate: (value, { password }) => value === password || 'The passwords do not match',
@@ -160,25 +184,17 @@ const signupPage = () => {
                     />
                      <button 
                             type="button" 
-                            onClick={togglePasswordVisiblity} 
-                            className="absolute right-0 pr-6 top-[0.875rem] flex items-center cursor-pointer"
+                            onClick={toggleConfirmPassword} 
+                            className="absolute right-0 pr-6 top-[0.875rem] flex items-center cursor-pointer md:top-[1.25rem] md:pr-8"
                         >
-                            <img src={Icon} 
-                             alt={visible ? "Hide Password" : "Show Password"} 
+                            <img src={confirmPasswordIcon} 
+                             alt={confirmPasswordVisible ? "Hide Password" : "Show Password"} 
                             className="w-6 h-6" />
                         </button>
                     </div>
 
-                    <SubmitButton text='Sign Up' />
-                    <div className="flex items-center w-full gap-2">
-                        <div className="flex-1 border-t border-gray-300"></div>
-                        <span className="font-normal text-gray-500 text-xs">Or login with</span>
-                        <div className="flex-1 border-t border-gray-300"></div>
-                    </div>
-                    <div className="flex justify-center gap-4 mt-6 mb-4">
-                        <img src={googleLogo} className="w-8 h-8 cursor-pointer" alt="google-logo"/>   
-                        <img src={appleLogo} className="w-8 h-8 cursor-pointer" alt="apple-logo" />
-                    </div>
+                    
+                    <SubmitButton text='Sign Up' customClass='md:py-4 md:text-2xl md:tracking-wider md:py-4 mt-5' />
                 </form>
             </div>
         </div>
@@ -186,4 +202,4 @@ const signupPage = () => {
   )
 }
 
-export default signupPage
+export default SignupPage

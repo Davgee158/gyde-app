@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import loginBg from "../assets/login-bg.png";
 import "../styles/loginPage.css";
-import appleLogo from "../assets/apple.png";
-import googleLogo from "../assets/google.png";
 import usePasswordToggle from "../hooks/usePasswordToggle";
 import { loginUser } from "../api/LoginAuth";
 import InputField from "../components/InputField";
 import SubmitButton from "../components/SubmitButton";
+import Logo from "../assets/gyde-small.svg"
+import GydeLogo from "../assets/Gyde-logo seperate-cropped.svg"
 
 
-const loginPage = () => {
+const LoginPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
 
     const {visible, Icon, togglePasswordVisiblity} = usePasswordToggle();
 
@@ -20,6 +20,7 @@ const loginPage = () => {
         try {
             const result = await loginUser(data);
             console.log("Login response", result);
+            navigate("/enterpin");
         } catch (error) {
             console.error("Login failed", error);
         }
@@ -30,21 +31,27 @@ const loginPage = () => {
 
 
     return (
-        <div className="login-container relative min-h-screen" >
-            <div className="bg-logo absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-                backgroundImage: `url(${loginBg})`,
-                backgroundSize: "cover",
-            }}>
+        <div className="login-container flex flex-col relative min-h-screen pt-10 md:block md:pt-0"
+        style={{
+            background: 'radial-gradient(circle at center 60%, #00a0c8 0%, #005e80 40%, #002940 70%, #00172a 100% )',
+            height: '100%',
+            width: '100%'
+        }}> 
+            <div className=" flex justify-center items-center pl-[2rem] mb-2 md:mb-14 pt-8">
+                <img src={Logo} alt="gyde" className="w-[10rem] h-[10rem]"/>
+                <img src={GydeLogo} alt="gyde-logo" className="w-[10rem] h-[10rem] relative left-[-5.9rem]" />
             </div>
-            <div className="bg-form rounded-tr-[4rem] px-10 py-6 bg-white" style={{minHeight: "calc(100vh - 22rem)"}}>
-                <h1 className="text-gray-800 text-3xl font-bold mb-5">Login</h1>
+            <div className="mt-auto rounded-tr-[4rem] px-10 py-6 bg-white mx-auto w-full md:w-3/5 md:rounded-[4rem] md:py-10 md:px-14">
+                <h1 className="text-gray-800 text-3xl md:text-4xl font-bold mb-5 md:mb-7">Login</h1>
 
                 <form noValidate onSubmit={handleSubmit(onSubmit)}>
                     <InputField 
                         id="email"
                         type="email"
                         placeholder="Email"
+                        marginClass="mb-8"
+                        boxClass="md:py-5 md:rounded-4xl md:text-xl px-16"
+                        divClass="md:py-5"
                         registerProps={register("email", {
                             required: "This is required",
                             validate: value => {
@@ -72,6 +79,9 @@ const loginPage = () => {
                             id="password"
                             type={visible ? "text" : "password"}
                             placeholder="Password"
+                            marginClass="mb-8"
+                            boxClass="md:py-5 md:rounded-4xl md:text-xl px-16"
+                            divClass="md:py-5"
                             registerProps={register("password", {
                                 required: "This is required",
                             })}
@@ -92,7 +102,7 @@ const loginPage = () => {
                         <button 
                             type="button" 
                             onClick={togglePasswordVisiblity} 
-                            className="absolute right-0 pr-6 top-[0.875rem] flex items-center cursor-pointer"
+                            className="absolute right-0 pr-6 top-[0.875rem] flex items-center cursor-pointer md:top-[1.5rem] md:pr-8"
                         >
                             <img src={Icon} 
                              alt={visible ? "Hide Password" : "Show Password"} 
@@ -100,23 +110,14 @@ const loginPage = () => {
                         </button>
                     </div>
                     
-                    <p className="text-right text-sky-950 font-semibold text-sm mb-4 cursor-pointer">Forgot Password?</p>
-                    <SubmitButton text="Login" />
-                    <div className="flex items-center w-full gap-2">
-                        <div className="flex-1 border-t border-gray-300"></div>
-                        <span className="font-normal text-gray-500 text-xs">Or login with</span>
-                        <div className="flex-1 border-t border-gray-300"></div>
-                    </div>
-                    <div className="flex justify-center gap-4 mt-6">
-                        <img src={googleLogo} className="w-8 h-8 cursor-pointer" alt="google-logo"/>   
-                        <img src={appleLogo} className="w-8 h-8 cursor-pointer" alt="apple-logo" />
-                    </div>
+                    <p className="text-right text-sky-950 font-semibold text-sm md:text-lg mb-4 md:mb-6 cursor-pointer">Forgot Password?</p>
+                    <SubmitButton text="Login" customClass="md:py-4 md:text-2xl md:tracking-wider md:py-4 md:mb-8" />
                 </form>
-                <p className="font-normal text-gray-500 text-xs text-center py-10">Dont' have an account?
-                    <Link to="/signup" className="text-sky-950 font-bold">Sign Up</Link>
+                <p className="font-normal text-gray-500 text-sm md:text-lg text-center py-2">Dont' have an account?
+                    <Link to="/signup" className="text-sky-950 md:text-lg font-bold ml-2">Sign Up</Link>
                     </p>
             </div>
         </div>
     )
 }
-export default loginPage
+export default LoginPage
