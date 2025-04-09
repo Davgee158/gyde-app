@@ -1,11 +1,11 @@
 import React from "react";
 
-const InputField = ({ id, type, placeholder, registerProps, errorMessage, icon, containerClass, ...rest }) => {
+const InputField = ({ id, type, placeholder, registerProps, errorMessage, icon, containerClass, marginClass="mb-6 md:mb-7", divClass, boxClass, ...rest }) => {
     return (
-        <div className={`mb-6 relative ${containerClass}`}>
+        <div className={`${marginClass} relative ${containerClass}`}>
                         <label htmlFor={id} className="sr-only">{placeholder}</label>
                         {icon && (
-                            <div className="absolute pt-3 pl-6 flex items-center pointer-events-none">
+                            <div className={`absolute pt-3 pl-6 flex items-center pointer-events-none ${divClass}`}>
                                 {icon}
                             </div>
                         )}
@@ -13,7 +13,7 @@ const InputField = ({ id, type, placeholder, registerProps, errorMessage, icon, 
                         type={type}
                         {...registerProps}
                         id={id} 
-                        className="w-full px-14 py-3 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-200 placeholder-gray-500 custom-input"
+                        className={`w-full px-14 py-3 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-200 placeholder-gray-500 custom-input ${boxClass}`}
                         {...rest} 
                         placeholder={placeholder} 
                         />

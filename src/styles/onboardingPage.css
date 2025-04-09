@@ -1,0 +1,22 @@
+@media (max-width: 320px), (max-height: 568px) {
+    .onboarding-container{
+        height: 100vh;
+        overflow-y: auto;
+        padding-top: 0;
+    }
+  .progress-bar {
+    position: static !important;
+    bottom: 50px !important;
+    margin-top: 2rem;
+    margin-left: 1.5rem;
+  }
+  
+  .nav-buttons {
+    position: static !important;
+    bottom: 0 !important;
+    margin-top: 2rem;
+  }
+  .nav-button{
+    border-radius: 10px;
+  }
+}

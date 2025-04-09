@@ -2,28 +2,4 @@
     font-family: 'Inter', sans-serif;
     color: #9CA3AF;
 }
-.bg-logo{
-    background-position: center 32%;
-}
-.bg-form{
-    position: relative;
-    top: 19rem;
-}
-@media(max-height: 550px) {
-    .bg-logo{
-        background-position: center 33%;
-    }
-    .bg-form{
-        top: 15rem;
-    }
-   
-}
 
-@media(min-height: 750px) {
-    .bg-logo{
-        background-position: center 31%;
-    }
-    .bg-form{
-        top: 20rem;
-    }
-}
